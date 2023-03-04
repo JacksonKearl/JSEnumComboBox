@@ -1,60 +1,70 @@
-var Values = {
+const Values = {
     first: 1,
     second: 2,
-    third: 3
+    third: 3,
 };
-var wellTypedEntries = function (o) {
-    return Object.entries(o);
-};
-var JSEnumComboBox = /** @class */ (function () {
-    function JSEnumComboBox(container) {
-        this.keyLookup = {};
-        this._enum = {};
+const wellTypedEntries = (o) => Object.entries(o);
+class JSEnumComboBox {
+    domElement;
+    keyLookup = {};
+    _enum = {};
+    constructor(container) {
         this.domElement = document.createElement("select");
         container.appendChild(this.domElement);
     }
-    JSEnumComboBox.prototype.setEnumClass = function (_enum) {
+    setEnumClass(_enum) {
         this.keyLookup = {};
         this._enum = _enum;
         while (this.domElement.firstChild)
             this.domElement.removeChild(this.domElement.firstChild);
-        for (var _i = 0, _a = wellTypedEntries(this._enum); _i < _a.length; _i++) {
-            var _b = _a[_i], k = _b[0], v = _b[1];
-            var option = document.createElement("option");
+        for (const [k, v] of wellTypedEntries(this._enum)) {
+            const option = document.createElement("option");
             option.innerText = k;
             option.setAttribute("value", v);
             this.domElement.appendChild(option);
             this.keyLookup[v] = k;
         }
-    };
-    JSEnumComboBox.prototype.currentEnum = function () {
+    }
+    currentEnum() {
         return this.keyLookup[this.domElement.value];
-    };
-    JSEnumComboBox.prototype.setCurrentEnum = function (e) {
+    }
+    setCurrentEnum(e) {
         this.domElement.value = this._enum[e];
         this.domElement.dispatchEvent(new InputEvent("input"));
-    };
-    JSEnumComboBox.prototype.observeCurrentEnum = function (listener) {
-        var _this = this;
+    }
+    observeCurrentEnum(listener) {
         listener(this.currentEnum());
-        this.domElement.addEventListener("input", function () {
-            return listener(_this.currentEnum());
-        });
-    };
-    return JSEnumComboBox;
-}());
-var box = new JSEnumComboBox(document.body);
-box.setEnumClass(Values);
-var _loop_1 = function (k) {
-    var b = document.createElement("button");
-    b.innerText = "Set to " + k;
-    b.onclick = function () { return box.setCurrentEnum(k); };
-    document.body.appendChild(b);
-};
-for (var _i = 0, _a = wellTypedEntries(Values); _i < _a.length; _i++) {
-    var k = _a[_i][0];
-    _loop_1(k);
+        this.domElement.addEventListener("input", () => listener(this.currentEnum()));
+    }
 }
-var message = document.createElement("div");
+const box = new JSEnumComboBox(document.body);
+box.setEnumClass(Values);
+for (const [k] of wellTypedEntries(Values)) {
+    const b = document.createElement("button");
+    b.innerText = "Set to " + k;
+    b.onclick = () => box.setCurrentEnum(k);
+    document.body.appendChild(b);
+}
+const message = document.createElement("div");
 document.body.appendChild(message);
-box.observeCurrentEnum(function (v) { return (message.innerText = "The box's value is " + v); });
+box.observeCurrentEnum((v) => (message.innerText = `The box's value is ${v}`));
+fetch("./index.ts").then(async (r) => {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.innerText = "View TS Source";
+    details.appendChild(summary);
+    const source = document.createElement("pre");
+    source.innerText = await r.text();
+    details.appendChild(source);
+    document.body.appendChild(details);
+});
+fetch("./index.js").then(async (r) => {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.innerText = "View JS Source";
+    details.appendChild(summary);
+    const source = document.createElement("pre");
+    source.innerText = await r.text();
+    details.appendChild(source);
+    document.body.appendChild(details);
+});

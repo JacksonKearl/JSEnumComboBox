@@ -64,3 +64,31 @@ for (const [k] of wellTypedEntries(Values)) {
 const message = document.createElement("div")
 document.body.appendChild(message)
 box.observeCurrentEnum((v) => (message.innerText = `The box's value is ${v}`))
+
+fetch("./index.ts").then(async (r) => {
+  const details = document.createElement("details")
+
+  const summary = document.createElement("summary")
+  summary.innerText = "View TS Source"
+  details.appendChild(summary)
+
+  const source = document.createElement("pre")
+  source.innerText = await r.text()
+  details.appendChild(source)
+
+  document.body.appendChild(details)
+})
+
+fetch("./index.js").then(async (r) => {
+  const details = document.createElement("details")
+
+  const summary = document.createElement("summary")
+  summary.innerText = "View JS Source"
+  details.appendChild(summary)
+
+  const source = document.createElement("pre")
+  source.innerText = await r.text()
+  details.appendChild(source)
+
+  document.body.appendChild(details)
+})
