@@ -27,8 +27,8 @@ class JSEnumComboBox<E extends string = string> {
 
     for (const [k, v] of wellTypedEntries(this._enum)) {
       const option = document.createElement("option")
-      option.innerText = String(k)
-      option.setAttribute("value", String(v))
+      option.innerText = k
+      option.setAttribute("value", v)
       this.domElement.appendChild(option)
       this.keyLookup[v] = k
     }
@@ -44,10 +44,10 @@ class JSEnumComboBox<E extends string = string> {
   }
 
   observeCurrentEnum(listener: (v: E) => void) {
+    listener(this.currentEnum())
     this.domElement.addEventListener("input", () =>
       listener(this.currentEnum()),
     )
-    listener(this.currentEnum())
   }
 }
 

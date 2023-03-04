@@ -21,8 +21,8 @@ var JSEnumComboBox = /** @class */ (function () {
         for (var _i = 0, _a = wellTypedEntries(this._enum); _i < _a.length; _i++) {
             var _b = _a[_i], k = _b[0], v = _b[1];
             var option = document.createElement("option");
-            option.innerText = String(k);
-            option.setAttribute("value", String(v));
+            option.innerText = k;
+            option.setAttribute("value", v);
             this.domElement.appendChild(option);
             this.keyLookup[v] = k;
         }
@@ -36,10 +36,10 @@ var JSEnumComboBox = /** @class */ (function () {
     };
     JSEnumComboBox.prototype.observeCurrentEnum = function (listener) {
         var _this = this;
+        listener(this.currentEnum());
         this.domElement.addEventListener("input", function () {
             return listener(_this.currentEnum());
         });
-        listener(this.currentEnum());
     };
     return JSEnumComboBox;
 }());
