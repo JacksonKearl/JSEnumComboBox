@@ -30,7 +30,7 @@ class JSEnumComboBox<E extends string = string> {
       option.innerText = String(k)
       option.setAttribute("value", String(v))
       this.domElement.appendChild(option)
-      this.keyLookup[v] = k as E
+      this.keyLookup[v] = k
     }
   }
 
